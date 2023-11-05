@@ -1,5 +1,5 @@
-# pytest-verbose-example
-This repo contains the sample code for the article - pytest fixture not found
+# pytest-fixture-autouse-example
+This repo contains the sample code for the article - pytest fixture autouse
 
 # Requirements
 * Python (3.10.6)
