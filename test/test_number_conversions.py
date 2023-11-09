@@ -1,38 +1,31 @@
 import pytest
-from src.number_conversions import Number_conversion
+from src.number_conversions import NumberConversions
 
 
-# Fixture that holds the list of numbers
-@pytest.fixture
-def list_num():
-    return []
-
-# Fixture  that initializes classes
-@pytest.fixture
-def initiate_class(list_num):
-    return Number_conversion(list_num[0]), Number_conversion(list_num[1]), Number_conversion(list_num[2])
+# Define a fixture to yield a static number
+@pytest.fixture(autouse=True, scope="session")
+def static_number():
+    print("\nAUTOUSE fixture `static_number` setup...")
+    yield 50
+    print("\nAUTOUSE fixture `static_number` teardown...")
 
 
-# Autouse fixture that creates a list of number
-# Executes before each test
-@pytest.fixture(autouse=True)
-def setup_test(list_num):
-    print("\nAUTOUSE fixture running...")
-    list_num.append(30)
-    list_num.append(40)
-    list_num.append(60)
-
-# Testing binary conversion
-def test_convert_to_binary(initiate_class):
-    assert initiate_class[0].convert_to_binary() == "0b11110"
-
-# Testing Octal conversion
-def test_convert_to_octal(initiate_class):
-    assert initiate_class[1].convert_to_octal() == "0o50"
-
-# Testing Hexadecimal conversion
-def test_convert_to_hexadecimal(initiate_class):
-    assert initiate_class[2].convert_to_hexadecimal() == "0x3c"
+# Define a fixture to create an instance of NumberConversions with a different scope
+@pytest.fixture(scope="function")
+def number_converter(static_number):
+    return NumberConversions(static_number)
 
 
+def test_convert_to_binary(number_converter):
+    result = number_converter.convert_to_binary()
+    assert result == "0b110010"
 
+
+def test_convert_to_octal(number_converter):
+    result = number_converter.convert_to_octal()
+    assert result == "0o62"
+
+
+def test_convert_to_hexadecimal(number_converter):
+    result = number_converter.convert_to_hexadecimal()
+    assert result == "0x32"
